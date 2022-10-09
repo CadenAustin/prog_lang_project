@@ -1,15 +1,19 @@
-/******************************************************************* 
-write an appropriate header comment, see the assignment
-*******************************************************************/
+/********************************************************************* 
+  Name: Caden Austin             NetID: CBA169 
+  Course: CSE 4714              Assignment: Part 1 
+  Programming Environment: Linux/VSCODE
+  Purpose of File: Contains the Rules for Flex 
+*********************************************************************/ 
 %option yylineno
 %option noyywrap
 %{
 #include "lexer.h"
-
+int line_number = 1;
 %}
 
 %%
 
+\n {++line_number;}
 
 BEGIN { return TOK_BEGIN; }
 BREAK { return TOK_BREAK; }
@@ -21,7 +25,7 @@ FOR { return TOK_FOR; }
 IF { return TOK_IF; }
 LET { return TOK_LET; }
 PROGRAM { return TOK_PROGRAM; }
-READ { return TOK_PROGRAM; }
+READ { return TOK_READ; }
 THEN { return TOK_THEN; }
 TO { return TOK_TO; }
 VAR { return TOK_VAR; }
@@ -31,30 +35,32 @@ WRITE { return TOK_WRITE; }
 INTEGER { return TOK_INTEGER; }
 REAL { return TOK_REAL; }
 
-';' { return TOK_SEMICOLON; }
-':' { return TOK_COLON; }
-'(' { return TOK_OPENPAREN; }
-')' { return TOK_CLOSEPAREN; }
+";" { return TOK_SEMICOLON; }
+":" { return TOK_COLON; }
+"(" { return TOK_OPENPAREN; }
+")" { return TOK_CLOSEPAREN; }
 
-'+' { return TOK_PLUS; }
-'-' { return TOK_MINUS; }
-'*' { return TOK_MULTIPLY; }
-'/' { return TOK_DIVIDE; }
-':=' { return TOK_ASSIGN; }
-'=' { return TOK_EQUALTO; }
-'<>' { return TOK_NOTEQUALTO; }
-'<' { return TOK_LESSTHAN; }
-'>' { return TOK_GREATERTHAN; }
+"+" { return TOK_PLUS; }
+"-" { return TOK_MINUS; }
+"*" { return TOK_MULTIPLY; }
+"/" { return TOK_DIVIDE; }
+":=" { return TOK_ASSIGN; }
+"=" { return TOK_EQUALTO; }
+"<>" { return TOK_NOTEQUALTO; }
+"<" { return TOK_LESSTHAN; }
+">" { return TOK_GREATERTHAN; }
 MOD { return TOK_MOD; }
 NOT { return TOK_NOT; }
 OR { return TOK_OR; }
 AND { return TOK_AND; }
 
-[a-zA-Z][a-zA-Z0-9]{0-7} { return TOK_IDENT; }
-[0-9].[0-9] { return TOK_FLOATLIT; }
-[0-9] { return TOK_INTLIT; }
-'\''*'\'' { return TOK_STRINGLIT; }
+[A-Z][A-Z0-9]* { if (yyleng < 9) return TOK_IDENT; else return TOK_UNKNOWN; }
+[0-9]+"\."+[0-9]+ { return TOK_FLOATLIT; }
+[0-9]+ { return TOK_INTLIT; }
+\'(\\.|[^'\\\n])*\' { if (yyleng < 81) return TOK_STRINGLIT; else return TOK_UNKNOWN; }
 
+"\{"+.?+"\}" /* comment */
+[ \t\r]+             /* nop */
 
  /* Found an unknown character */
 
