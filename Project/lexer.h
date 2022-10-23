@@ -1,8 +1,7 @@
 //*****************************************************************************
-// purpose: List of tokens for TIPS
-// version: Fall 2022
-//  author: Ed Swan / Joe Crumpton
+// CSE 4714 / 6714 Project - List of tokens for TIPS
 //*****************************************************************************
+
 #ifndef LEXER_H
 #define LEXER_H
 
