@@ -1,6 +1,6 @@
 /********************************************************************* 
   Name: Caden Austin             NetID: CBA169 
-  Course: CSE 4714              Assignment: Part 1 
+  Course: CSE 4714              Assignment: Part 2 
   Programming Environment: Linux/VSCODE
   Purpose of File: Contains the Rules for Flex 
 *********************************************************************/ 
