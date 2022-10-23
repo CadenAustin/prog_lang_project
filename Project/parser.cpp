@@ -244,11 +244,13 @@ void block() {
 void compound_stmt() {
   cout << psp() << "enter <compound_stmt>" << endl;
   ++level;
+  lex();
 
-  while (!first_of_statement()) {
+  while (first_of_statement()) {
     statement();
     advance_tok();
     if (nextToken != TOK_SEMICOLON) throw "14: ';' expected";
+    lex();
   }
   advance_tok();
   if (nextToken != TOK_END) throw "13: 'END' expected";
@@ -261,17 +263,22 @@ void statement() {
   output("STATEMENT");
   switch(nextToken) {
     case TOK_IDENT:
+      assignment_stmt();
       break;
     case TOK_BEGIN:
       compound_stmt();
       break;
     case TOK_IF:
+      if_stmt();
       break;
     case TOK_WHILE:
+      while_stmt();
       break;
     case TOK_READ:
+      read_stmt();
       break;
     case TOK_WRITE:
+      write_stmt();  
       break;
     default:
       throw "900: illegal type of statement";
