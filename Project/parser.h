@@ -37,6 +37,8 @@ void read_stmt();
 void write_stmt();
 void expression();
 void simp_expr();
+void term();
+void factor();
 void identifier_block();
 
 #endif /* PARSER_H */
