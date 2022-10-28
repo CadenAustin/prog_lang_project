@@ -1,7 +1,9 @@
-//*****************************************************************************
-// purpose: driver Lab 3
-//  author: 
-//*****************************************************************************
+/********************************************************************* 
+  Name: Caden Austin             NetID: CBA169 
+  Course: CSE 4714              Assignment: Lab 3
+  Programming Environment: Linux/VSCODE
+  Purpose of File: Driver file
+*********************************************************************/
 #ifdef _MSC_VER
 #define _CRT_SECURE_NO_WARNINGS
 #endif
@@ -15,14 +17,14 @@ using namespace std;
 #include "nodes.h"
 
 void nodeExamples(){
-  //IntegerNode a(14);
-  //cout << a << endl;
+  IntegerNode a(14);
+  cout << a << endl;
 
-  //FloatNode b(99.99);
-  //cout << b << endl;
+  FloatNode b(99.99);
+  cout << b << endl;
 
-  //StringNode c("testing");
-  //cout << c << endl;
+  StringNode c("testing");
+  cout << c << endl;
 
   cout << endl;
 }
@@ -37,10 +39,14 @@ int main( int argc, char* argv[] ) {
   vector<DataNode*> aVector;
 
   // Add four data item pointers to the vector: "first", 2, 3.14, "fourth"
-  // aVector.push_back(new StringNode("first"));
+  aVector.push_back(new StringNode("first"));
+  aVector.push_back(new IntegerNode(2));
+  aVector.push_back(new FloatNode(3.14));
+  aVector.push_back(new StringNode("fourth"));
   
 
   // Output the size of the vector
+  cout << "Size of the vector: " << aVector.size() << endl;
 
   // Output the items pointed to by vector elements using the .at method
   for (int i=0; i < aVector.size(); i = i + 1) {
@@ -49,21 +55,37 @@ int main( int argc, char* argv[] ) {
   cout << endl;
 
   // Add four more data item pointers to the vector: 5, 6.28, "seventh", "eighth"
+  aVector.push_back(new IntegerNode(5));
+  aVector.push_back(new FloatNode(6.28));
+  aVector.push_back(new StringNode("seventh"));
+  aVector.push_back(new StringNode("eighth"));
 
   // Output the size of the vector
+  cout << "Size of the vector: " << aVector.size() << endl;
 
   // Output the items pointed to by vector elements using an iterator
+  for (int i=0; i < aVector.size(); i = i + 1) {
+    cout << *(aVector.at(i)) << endl;
+  }
+  cout << endl;
 
   // Delete the items pointed to by vector elements
   // Do NOT hard code the size of the vector
   // To indicate that the node is deleted, set the item pointer to nullptr
+  for (int i=0; i < aVector.size(); i = i + 1) {
+    delete aVector.at(i);
+  }
+  cout << endl;
 
 
   // Output the size of the vector
+  cout << "Size of the vector: " << aVector.size() << endl;
 
   // Clear the vector
+  aVector.clear();
 
   // Output the size of the vector
+  cout << "Size of the vector: " << aVector.size() << endl;
 
   return 0;
 }
