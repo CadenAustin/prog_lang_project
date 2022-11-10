@@ -9,6 +9,7 @@
 #define PARSER_H
 
 #include <string>
+#include "parse_tree_nodes.h"
 #include <set>
 #include <iostream>
 
@@ -18,6 +19,7 @@ using namespace std;
 extern set<string> symbolTable;
 
 extern int nextToken;        // next token returned by lexer
+extern bool printParse; 
 
 extern "C" {
 	// Instantiate global variables used by flex
@@ -26,7 +28,7 @@ extern "C" {
 }
 
 // Function declarations
-void program();
+ProgramNode* program();
 void block();
 void compound_stmt();
 void statement();
