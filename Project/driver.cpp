@@ -35,16 +35,11 @@ extern int nextToken; // token returned from yylex
 int main(int argc, char *argv[])
 {
 
-  bool printTree = true; // whether to print the parse tree
+  bool printTree = false; // whether to print the parse tree
 
   // Process any command-line switches
   for (int i = 1; i < argc; i++)
   {
-    // -p flag: if requested, print while parsing
-    if (strcmp(argv[i], "-p") == 0)
-    {
-      printParse = true;
-    }
     // -t flag: if requested, print parse tree
     if (strcmp(argv[i], "-t") == 0)
     {
@@ -106,20 +101,22 @@ int main(int argc, char *argv[])
        << "=== GO BULLDOGS! Your parse was successful! ===" << endl;
 
   if(printTree) {
-    cout << endl << "*** Print the Tree ***" << endl;
-    cout << *root << endl << endl;
+    cout << endl << "*** Print the Tree ***" << endl << endl;
+    cout << *root << endl << endl << endl;
   }
 
   // Print out the symbol table
-  cout << endl
-       << "User Defined Symbols:" << endl;
+  cout << "*** User Defined Symbols ***" << endl;
   set<string>::iterator it;
   for (it = symbolTable.begin(); it != symbolTable.end(); ++it)
   {
     cout << *it << endl;
   }
 
-  cout << "*** Delete the Tree ***" << endl;
+  cout << endl;
+
+  if (printDelete)
+    cout << "*** Delete the Tree ***" << endl;
   delete root;
   root = nullptr;
 

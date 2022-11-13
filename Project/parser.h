@@ -29,18 +29,18 @@ extern "C" {
 
 // Function declarations
 ProgramNode* program();
-void block();
-void compound_stmt();
-void statement();
-void assignment_stmt();
-void if_stmt();
-void while_stmt();
-void read_stmt();
-void write_stmt();
-void expression();
-void simp_expr();
-void term();
-void factor();
+BlockNode* block();
+CompoundNode* compound_stmt();
+StatementNode* statement();
+AssignmentNode* assignment_stmt();
+IfNode* if_stmt();
+WhileNode* while_stmt();
+ReadNode* read_stmt();
+WriteNode* write_stmt();
+ExpressionNode* expression();
+SimpleExpNode* simp_expr();
+TermNode* term();
+FactorNode* factor();
 void identifier_block();
 
 #endif /* PARSER_H */
