@@ -589,7 +589,7 @@ FactorNode *factor()
     cout << psp() << yytext << endl;
     lex();
     NestedExpNode *tempNestedExpNode = new NestedExpNode();
-    tempNestedExpNode->set_child(expression());
+    tempNestedExpNode->child = expression();
     returnNode = tempNestedExpNode;
     if (nextToken != TOK_CLOSEPAREN)
       throw "4: ')' expected";

@@ -196,7 +196,6 @@ class NestedExpNode : public FactorNode {
 public:
   NestedExpNode() {}
   ~NestedExpNode();
-  void set_child(ExpressionNode* _child) {child = _child;}
 
   ExpressionNode* child;
 
