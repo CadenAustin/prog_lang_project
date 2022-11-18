@@ -28,8 +28,8 @@ CCFLAGS  = -g
 # don't ever remove these files
 .PRECIOUS = *.l *.h *.cpp [Mm]akefile
 
-tips_parse: lex.yy.o driver.o parser.o parse_tree_nodes.o
-	$(CXX) $(CXXFLAGS) -o tips_parse lex.yy.o driver.o parser.o parse_tree_nodes.o
+tips: lex.yy.o driver.o parser.o parse_tree_nodes.o
+	$(CXX) $(CXXFLAGS) -o tips lex.yy.o driver.o parser.o parse_tree_nodes.o
 
 #     -o flag specifies the output file
 #
@@ -54,7 +54,7 @@ lex.yy.c: rules.l lexer.h
 	$(LEX) -o lex.yy.c rules.l
 
 clean: 
-	$(RM) *.o lex.yy.c tips_parse
+	$(RM) *.o lex.yy.c tips
 #   delete all generated files	
 
 ring:

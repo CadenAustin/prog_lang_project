@@ -10,13 +10,14 @@
 
 #include <string>
 #include "parse_tree_nodes.h"
-#include <set>
 #include <iostream>
+#include <map>
 
 using namespace std;
 
 // Holds the symbols in the interpreted program
-extern set<string> symbolTable;
+typedef map<string, float> symbolTableT; 
+extern symbolTableT symbolTable; 
 
 extern int nextToken;        // next token returned by lexer
 extern bool printParse; 

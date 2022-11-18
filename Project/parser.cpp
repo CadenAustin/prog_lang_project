@@ -25,7 +25,7 @@ static int level = 0;
 // Feel free to use a different data structure for the symbol table (list of
 // variables declared in the program) but you will have to adjust the code in
 // main() to print out the symbol table after a successful parse
-set<string> symbolTable; // Symbol Table
+symbolTableT symbolTable; // Symbol Table
 
 int lex()
 {
@@ -186,12 +186,12 @@ string tok_to_string(int token)
 
 void output(string what)
 {
-  cout << psp() << "found |" << yytext << "| " << what << endl;
+  if (printParse) cout <<  psp() << "found |" << yytext << "| " << what << endl;
 }
 
 void output_type(string what, string type)
 {
-  cout << psp() << "-- idName: |" << what << "| idType: |" << type << "| --" << endl;
+  if (printParse) cout <<  psp() << "-- idName: |" << what << "| idType: |" << type << "| --" << endl;
 }
 
 void advance_tok(void)
@@ -218,7 +218,7 @@ ProgramNode *program()
     throw "3: 'PROGRAM' expected";
   output(tok_to_string(nextToken));
 
-  cout << psp() << "enter <program>" << endl;
+  if (printParse) cout << psp() << "enter <program>" << endl;
   ++level;
 
   advance_tok();
@@ -230,7 +230,7 @@ ProgramNode *program()
   returnNode->child = block();
 
   --level;
-  cout << psp() << "exit <program>" << endl;
+  if (printParse) cout <<  psp() << "exit <program>" << endl;
   return returnNode;
 }
 
@@ -241,7 +241,7 @@ BlockNode *block()
   if (!first_of_block())
     throw "18: error in declaration part OR 17: 'BEGIN' expected";
   output("BLOCK");
-  cout << psp() << "enter <block>" << endl;
+  if (printParse) cout <<  psp() << "enter <block>" << endl;
   ++level;
 
   if (nextToken == TOK_VAR)
@@ -260,14 +260,14 @@ BlockNode *block()
   returnNode->child = compound_stmt();
 
   --level;
-  cout << psp() << "exit <block>" << endl;
+  if (printParse) cout <<  psp() << "exit <block>" << endl;
   return returnNode;
 }
 
 CompoundNode *compound_stmt()
 {
   CompoundNode *returnNode = new CompoundNode();
-  cout << psp() << "enter <compound_stmt>" << endl;
+  if (printParse) cout <<  psp() << "enter <compound_stmt>" << endl;
   ++level;
   lex();
 
@@ -297,7 +297,7 @@ CompoundNode *compound_stmt()
   --level;
   output(tok_to_string(nextToken));
   lex();
-  cout << psp() << "exit <compound_stmt>" << endl;
+  if (printParse) cout <<  psp() << "exit <compound_stmt>" << endl;
   return returnNode;
 }
 
@@ -335,12 +335,12 @@ StatementNode *statement()
 AssignmentNode *assignment_stmt()
 {
   AssignmentNode *returnNode = new AssignmentNode();
-  cout << psp() << "enter <assignment>" << endl;
+  if (printParse) cout <<  psp() << "enter <assignment>" << endl;
   ++level;
   if (symbolTable.find(yytext) == symbolTable.end())
     throw "104: identifier not declared";
   output(tok_to_string(nextToken));
-  cout << psp() << yytext << endl;
+  if (printParse) cout <<  psp() << yytext << endl;
   returnNode->ident = yytext;
   advance_tok();
   if (nextToken != TOK_ASSIGN)
@@ -351,14 +351,14 @@ AssignmentNode *assignment_stmt()
   returnNode->child = expression();
 
   --level;
-  cout << psp() << "exit <assignment>" << endl;
+  if (printParse) cout <<  psp() << "exit <assignment>" << endl;
   return returnNode;
 }
 
 IfNode *if_stmt()
 {
   IfNode *returnNode = new IfNode();
-  cout << psp() << "enter <if>" << endl;
+  if (printParse) cout <<  psp() << "enter <if>" << endl;
   ++level;
 
   lex();
@@ -373,7 +373,7 @@ IfNode *if_stmt()
   {
     --level;
     output(tok_to_string(nextToken));
-    cout << psp() << "enter <else>" << endl;
+    if (printParse) cout <<  psp() << "enter <else>" << endl;
     ++level;
 
     lex();
@@ -381,14 +381,14 @@ IfNode *if_stmt()
   }
 
   --level;
-  cout << psp() << "exit <if>" << endl;
+  if (printParse) cout <<  psp() << "exit <if>" << endl;
   return returnNode;
 }
 
 WhileNode *while_stmt()
 {
   WhileNode *returnNode = new WhileNode();
-  cout << psp() << "enter <while>" << endl;
+  if (printParse) cout <<  psp() << "enter <while>" << endl;
   ++level;
 
   lex();
@@ -396,14 +396,14 @@ WhileNode *while_stmt()
   returnNode->stmt = statement();
 
   --level;
-  cout << psp() << "exit <while>" << endl;
+  if (printParse) cout <<  psp() << "exit <while>" << endl;
   return returnNode;
 }
 
 ReadNode *read_stmt()
 {
   ReadNode *returnNode = new ReadNode();
-  cout << psp() << "enter <read>" << endl;
+  if (printParse) cout <<  psp() << "enter <read>" << endl;
   ++level;
 
   advance_tok();
@@ -415,7 +415,7 @@ ReadNode *read_stmt()
   if (symbolTable.find(yytext) == symbolTable.end())
     throw "104: identifier not declared";
   output(tok_to_string(nextToken));
-  cout << psp() << yytext << endl;
+  if (printParse) cout <<  psp() << yytext << endl;
   returnNode->ident = yytext;
   advance_tok();
   if (nextToken != TOK_CLOSEPAREN)
@@ -423,14 +423,14 @@ ReadNode *read_stmt()
   lex();
 
   --level;
-  cout << psp() << "exit <read>" << endl;
+  if (printParse) cout <<  psp() << "exit <read>" << endl;
   return returnNode;
 }
 
 WriteNode *write_stmt()
 {
   WriteNode *returnNode = new WriteNode();
-  cout << psp() << "enter <write>" << endl;
+  if (printParse) cout <<  psp() << "enter <write>" << endl;
   ++level;
 
   advance_tok();
@@ -442,15 +442,16 @@ WriteNode *write_stmt()
   if (nextToken == TOK_IDENT && symbolTable.find(yytext) == symbolTable.end())
     throw "104: identifier not declared";
   output("WRITE");
-  cout << psp() << yytext << endl;
+  if (printParse) cout <<  psp() << yytext << endl;
   returnNode->ident = yytext;
+  returnNode->type = nextToken;
   advance_tok();
   if (nextToken != TOK_CLOSEPAREN)
     throw "4: ')' expected";
   lex();
 
   --level;
-  cout << psp() << "exit <write>" << endl;
+  if (printParse) cout <<  psp() << "exit <write>" << endl;
   return returnNode;
 }
 
@@ -458,7 +459,7 @@ ExpressionNode *expression()
 {
   ExpressionNode *returnNode = new ExpressionNode();
   output("EXPRESSION");
-  cout << psp() << "enter <expression>" << endl;
+  if (printParse) cout <<  psp() << "enter <expression>" << endl;
   ++level;
 
   returnNode->children.push_back(simp_expr());
@@ -480,13 +481,13 @@ ExpressionNode *expression()
       break;
     }
     output(tok_to_string(nextToken));
-    cout << psp() << yytext << endl;
+    if (printParse) cout <<  psp() << yytext << endl;
     lex();
     returnNode->children.push_back(simp_expr());
   }
 
   --level;
-  cout << psp() << "exit <expression>" << endl;
+  if (printParse) cout <<  psp() << "exit <expression>" << endl;
   return returnNode;
 }
 
@@ -494,7 +495,7 @@ SimpleExpNode *simp_expr()
 {
   SimpleExpNode *returnNode = new SimpleExpNode();
   output("SIMPLE_EXP");
-  cout << psp() << "enter <simple_exp>" << endl;
+  if (printParse) cout <<  psp() << "enter <simple_exp>" << endl;
   ++level;
 
   bool expect_term = true;
@@ -519,7 +520,7 @@ SimpleExpNode *simp_expr()
         break;
       }
       output(tok_to_string(nextToken));
-      cout << psp() << yytext << endl;
+      if (printParse) cout <<  psp() << yytext << endl;
       lex();
     }
     else
@@ -529,7 +530,7 @@ SimpleExpNode *simp_expr()
   }
 
   --level;
-  cout << psp() << "exit <simple_exp>" << endl;
+  if (printParse) cout <<  psp() << "exit <simple_exp>" << endl;
   return returnNode;
 }
 
@@ -537,7 +538,7 @@ TermNode *term()
 {
   TermNode *returnNode = new TermNode();
   output("TERM");
-  cout << psp() << "enter <term>" << endl;
+  if (printParse) cout <<  psp() << "enter <term>" << endl;
   ++level;
 
   bool expect_factor = true;
@@ -562,7 +563,7 @@ TermNode *term()
         break;
       }
       output(tok_to_string(nextToken));
-      cout << psp() << yytext << endl;
+      if (printParse) cout <<  psp() << yytext << endl;
       lex();
     }
     else
@@ -572,7 +573,7 @@ TermNode *term()
   }
 
   --level;
-  cout << psp() << "exit <term>" << endl;
+  if (printParse) cout <<  psp() << "exit <term>" << endl;
   return returnNode;
 }
 
@@ -580,13 +581,13 @@ FactorNode *factor()
 {
   FactorNode *returnNode = nullptr;
   output("FACTOR");
-  cout << psp() << "enter <factor>" << endl;
+  if (printParse) cout <<  psp() << "enter <factor>" << endl;
   ++level;
 
   if (nextToken == TOK_OPENPAREN)
   {
     output(tok_to_string(nextToken));
-    cout << psp() << yytext << endl;
+    if (printParse) cout <<  psp() << yytext << endl;
     lex();
     NestedExpNode *tempNestedExpNode = new NestedExpNode();
     tempNestedExpNode->child = expression();
@@ -600,7 +601,7 @@ FactorNode *factor()
   {
     NotNode *tempNotNode = new NotNode();
     output(tok_to_string(nextToken));
-    cout << psp() << yytext << endl;
+    if (printParse) cout <<  psp() << yytext << endl;
     lex();
     if (!first_of_factor())
       throw "903: illegal type of factor";
@@ -611,7 +612,7 @@ FactorNode *factor()
   {
     MinusNode *tempMinusNode = new MinusNode();
     output(tok_to_string(nextToken));
-    cout << psp() << yytext << endl;
+    if (printParse) cout <<  psp() << yytext << endl;
     lex();
     if (!first_of_factor())
       throw "903: illegal type of factor";
@@ -621,7 +622,7 @@ FactorNode *factor()
   else
   {
     output(tok_to_string(nextToken));
-    cout << psp() << yytext << endl;
+    if (printParse) cout <<  psp() << yytext << endl;
     if (nextToken == TOK_IDENT && symbolTable.find(yytext) == symbolTable.end())
       throw "104: identifier not declared";
     if (nextToken == TOK_INTLIT)
@@ -640,7 +641,7 @@ FactorNode *factor()
   }
 
   --level;
-  cout << psp() << "exit <factor>" << endl;
+  if (printParse) cout <<  psp() << "exit <factor>" << endl;
   return returnNode;
 }
 
@@ -648,7 +649,7 @@ void identifier_block()
 {
   if (nextToken != TOK_IDENT)
     throw "2: identifier expected";
-  string what = yytext;
+  string what(yytext);
   output(tok_to_string(nextToken));
   advance_tok();
   if (nextToken != TOK_COLON)
@@ -657,7 +658,7 @@ void identifier_block()
   if (nextToken != TOK_INTEGER && nextToken != TOK_REAL)
     throw "10: error in type";
   output("TYPE");
-  string type = yytext;
+  string type(yytext);
   advance_tok();
   if (nextToken != TOK_SEMICOLON)
     throw "14: ';' expected";
@@ -665,7 +666,7 @@ void identifier_block()
 
   if (symbolTable.find(what) != symbolTable.end())
     throw "101: identifier declared twice";
-  symbolTable.insert(what);
+  symbolTable.insert(pair<string, float>(what, 0.0f));
   return;
 }
 

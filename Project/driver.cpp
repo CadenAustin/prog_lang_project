@@ -36,14 +36,22 @@ int main(int argc, char *argv[])
 {
 
   bool printTree = false; // whether to print the parse tree
-
+  bool printSymbolTable = false;
   // Process any command-line switches
   for (int i = 1; i < argc; i++)
   {
+    // -p flag: if requested, print while parsing
+    if(strcmp(argv[i], "-p") == 0) {
+      printParse = true;
+    }
     // -t flag: if requested, print parse tree
     if (strcmp(argv[i], "-t") == 0)
     {
       printTree = true;
+    }
+    // -s flag: if requested, print symbol table
+    if(strcmp(argv[i], "-s") == 0) {
+      printSymbolTable = true;
     }
     // -d flag: if requested, print while deleting parse tree
     if (strcmp(argv[i], "-d") == 0)
@@ -97,8 +105,11 @@ int main(int argc, char *argv[])
   }
 
   // Tell the world about our success!!
-  cout << endl
+  if (printParse) cout << endl
        << "=== GO BULLDOGS! Your parse was successful! ===" << endl;
+
+  cout << "*** Interpret the Tree ***" << endl;
+  root->interpret();
 
   if(printTree) {
     cout << endl << "*** Print the Tree ***" << endl << endl;
@@ -106,14 +117,16 @@ int main(int argc, char *argv[])
   }
 
   // Print out the symbol table
-  cout << "*** User Defined Symbols ***" << endl;
-  set<string>::iterator it;
-  for (it = symbolTable.begin(); it != symbolTable.end(); ++it)
-  {
-    cout << *it << endl;
-  }
+  if (printSymbolTable) {
+    cout << "*** User Defined Symbols ***" << endl;
+    symbolTableT::iterator it;
+    for (it = symbolTable.begin(); it != symbolTable.end(); ++it)
+    {
+      cout << it->first << ": " << it->second << endl;
+    }
 
-  cout << endl;
+    cout << endl;
+  }
 
   if (printDelete)
     cout << "*** Delete the Tree ***" << endl;
